@@ -31,15 +31,13 @@ pandas = "^1.4.1"
 lxml = "^4.7.1"
 
 [tool.poetry.group.dev.dependencies]
-pyroll-core = { git = "ssh://git@github.com/pyroll-project/pyroll-core.git", branch = "remove_ui" }
 pytest = "^7.0.0"
 
 [tool.poetry.group.cli]
 optional = true
 
 [tool.poetry.group.cli.dependencies]
-#pyroll-cli = "^2.0.0a"
-pyroll-cli = { git = "ssh://git@github.com/pyroll-project/pyroll-cli.git", branch = "main" }
+pyroll-cli = "^2.0.0a"
 
 [tool.poetry.plugins."pyroll.cli.commands"]
 export-csv = "pyroll.export.cli:export_csv"
