@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyroll-export"
-version = "2.0.0a1"
+version = "2.0.0a1-1"
 description = "PyRoll rolling simulation framework - data export."
 authors = [
     "Max Weiner <max.weiner@imf.tu-freiberg.de>",

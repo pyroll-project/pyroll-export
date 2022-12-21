@@ -1,4 +1,4 @@
-from typing import Sequence, Any
+from typing import Sequence, Any, Union
 
 import numpy as np
 
@@ -12,7 +12,7 @@ def _to_dict(instance: ReprMixin):
     }
 
 
-def _flatten_dict(d: dict[str, Any]) -> dict[str | tuple[str, ...], Any]:
+def _flatten_dict(d: dict[str, Any]) -> dict[Union[str, tuple[str, ...]], Any]:
     def _gen(d_: dict[str, Any], prefix=()):
         for k, v in d_.items():
             if isinstance(v, dict):
