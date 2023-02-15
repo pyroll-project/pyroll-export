@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyroll-export"
-version = "2.0.0a1-1"
+version = "2.0.0rc"
 description = "PyRoll rolling simulation framework - data export."
 authors = [
     "Max Weiner <max.weiner@imf.tu-freiberg.de>",
@@ -25,9 +25,9 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.9, <4.0"
-pyroll-core = "^2.0.0a"
+pyroll-core = "^2.0.0rc"
 pluggy = "^1.0.0"
-pandas = "^1.4.1"
+pandas = "^1.4"
 lxml = "^4.7.1"
 
 [tool.poetry.group.dev.dependencies]
@@ -37,7 +37,7 @@ pytest = "^7.0.0"
 optional = true
 
 [tool.poetry.group.cli.dependencies]
-pyroll-cli = "^2.0.0a"
+pyroll-cli = "^2.0.0rc"
 
 [tool.poetry.plugins."pyroll.cli.commands"]
 export-csv = "pyroll.export.cli:export_csv"
