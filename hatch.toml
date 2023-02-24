@@ -10,7 +10,7 @@ path = "pyroll/export/__init__.py"
 path = ".venv"
 dependencies = [
     "pytest ~= 7.0",
-    "pyroll-cli ~= 2.0.0rc"
+    "pyroll-cli ~= 2.0"
 ]
 
 [envs.test]
