@@ -5,6 +5,7 @@ import pandas as pd
 from .convert import _to_dict, _flatten_dict
 from pyroll.core import Unit
 import json
+import rtoml
 
 
 def to_dict(unit: Unit) -> dict[str, Any]:
@@ -21,3 +22,7 @@ def to_pandas(sequence: Sequence[Unit]) -> pd.DataFrame:
 
 def to_json(unit: Unit) -> str:
     return json.dumps(to_dict(unit), indent=4)
+
+
+def to_toml(unit: Unit) -> str:
+    return rtoml.dumps(to_dict(unit))

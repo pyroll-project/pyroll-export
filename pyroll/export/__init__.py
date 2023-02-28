@@ -1,6 +1,6 @@
 import importlib.util
 
-from .export import to_dict, to_pandas, to_json
+from .export import to_dict, to_pandas, to_json, to_toml
 from pyroll.export.pluggy import plugin_manager
 
 from . import hookspecs
