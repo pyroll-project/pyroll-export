@@ -1,6 +1,8 @@
 from typing import Any, Sequence
 
+import lxml
 import pandas as pd
+import yaml
 
 from .convert import _to_dict, _flatten_dict
 from pyroll.core import Unit
@@ -26,3 +28,7 @@ def to_json(unit: Unit) -> str:
 
 def to_toml(unit: Unit) -> str:
     return rtoml.dumps(to_dict(unit))
+
+
+def to_yaml(unit: Unit) -> str:
+    return yaml.dump(to_dict(unit))

@@ -77,3 +77,10 @@ def test_toml(tmp_path: Path):
 
     print()
     print(exported)
+
+
+def test_yaml(tmp_path: Path):
+    exported = pyroll.export.to_yaml(sequence)
+
+    print()
+    print(exported)
