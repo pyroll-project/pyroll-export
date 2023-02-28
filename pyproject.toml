@@ -45,6 +45,8 @@ dynamic = ["version"]
 [project.entry-points."pyroll.cli.commands"]
 export-csv = "pyroll.export.cli:export_csv"
 export-json = "pyroll.export.cli:export_json"
+export-toml = "pyroll.export.cli:export_toml"
+export-yaml = "pyroll.export.cli:export_yaml"
 
 [project.urls]
 Homepage = "https://pyroll-project.github.io"

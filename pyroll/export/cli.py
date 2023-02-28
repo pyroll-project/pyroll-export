@@ -3,7 +3,7 @@ from pathlib import Path
 
 from pyroll.cli import State
 import click
-from .export import to_json, to_pandas
+from .export import to_json, to_pandas, to_toml, to_yaml
 
 DEFAULT_EXPORT_FILE = Path("export")
 
@@ -41,4 +41,40 @@ def export_csv(state: State, file: Path):
     exported = to_pandas(state.sequence)
 
     exported.to_csv(file)
+    log.info(f"Wrote export to: {file.absolute()}")
+
+
+@click.command()
+@click.option(
+    "-f", "--file",
+    help="File to write to.",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=DEFAULT_EXPORT_FILE.with_suffix(".toml"), show_default=True
+)
+@click.pass_obj
+def export_toml(state: State, file: Path):
+    """Exports the simulation results to TOML and writes them to FILE."""
+    log = logging.getLogger(__name__)
+
+    exported = to_toml(state.sequence)
+
+    file.write_text(exported, encoding='utf-8')
+    log.info(f"Wrote export to: {file.absolute()}")
+
+
+@click.command()
+@click.option(
+    "-f", "--file",
+    help="File to write to.",
+    type=click.Path(dir_okay=False, path_type=Path),
+    default=DEFAULT_EXPORT_FILE.with_suffix(".yaml"), show_default=True
+)
+@click.pass_obj
+def export_yaml(state: State, file: Path):
+    """Exports the simulation results to YAML and writes them to FILE."""
+    log = logging.getLogger(__name__)
+
+    exported = to_yaml(state.sequence)
+
+    file.write_text(exported, encoding='utf-8')
     log.info(f"Wrote export to: {file.absolute()}")
