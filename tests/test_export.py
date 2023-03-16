@@ -37,7 +37,8 @@ sequence = PassSequence([
     Transport(
         label="I => II",
         duration=1,
-        array_values=np.array([1, 2, 3, 4])
+        array_values=np.array([1, 2, 3, 4]),
+        zero_d_array=np.array(4),
     ),
     RollPass(
         label="Round II",

@@ -1,6 +1,5 @@
 from typing import Any, Sequence
 
-import lxml
 import pandas as pd
 import yaml
 

@@ -31,13 +31,15 @@ classifiers = [
     "Framework :: Sphinx",
     "Natural Language :: English",
 ]
-requires-python = ">=3.9, <4.0"
+requires-python = ">=3.9"
 
 dependencies = [
     "pyroll-core ~= 2.0",
     "pluggy ~= 1.0",
     "pandas ~= 1.4",
     "lxml ~= 4.7",
+    "pyyaml ~= 6.0",
+    "rtoml ~= 0.9"
 ]
 
 dynamic = ["version"]

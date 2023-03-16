@@ -48,7 +48,11 @@ def convert_mapping(name: str, value: object):
 
 @hookimpl(specname="convert")
 def convert_sequence(name: str, value: object):
-    if (isinstance(value, Sequence) or isinstance(value, Set)) and not isinstance(value, str):
+    if (
+            (isinstance(value, Sequence) or isinstance(value, Set))
+            and not isinstance(value, str)
+            and not isinstance(value, np.ndarray)
+    ):
         return [plugin_manager.hook.convert(name=f"{name}[{i}]", value=v) for i, v in enumerate(value)]
 
 
