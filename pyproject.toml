@@ -51,6 +51,6 @@ export-toml = "pyroll.export.cli:export_toml"
 export-yaml = "pyroll.export.cli:export_yaml"
 
 [project.urls]
-Homepage = "https://pyroll-project.github.io"
+Homepage = "https://pyroll.readthedocs.io"
 Repository = "https://github.com/pyroll-project/pyroll-cli"
 Documentation = "https://pyroll.readthedocs.io/en/latest/basic/cli.html"
