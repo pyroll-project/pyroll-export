@@ -2,7 +2,7 @@ from typing import Any, Union
 from collections.abc import Sequence, Set, Mapping
 
 import numpy as np
-from shapely.lib import Geometry
+import shapely
 
 from pyroll.export.pluggy import hookimpl, plugin_manager
 from pyroll.core.repr import ReprMixin
@@ -29,9 +29,65 @@ def _flatten_dict(d: dict[str, Any]) -> dict[Union[str, tuple[str, ...]], Any]:
 
 
 @hookimpl(specname="convert")
-def convert_shapely(value: object):
-    if isinstance(value, Geometry):
-        return _to_dict(value)
+def convert_shapely_line_string(value: object):
+    if isinstance(value, shapely.LineString):
+        return dict(
+            length=value.length,
+            height=value.bounds[3] - value.bounds[1],
+            width=value.bounds[2] - value.bounds[0],
+            x=np.array(value.xy[0]),
+            y=list(value.xy[1]),
+        )
+
+
+@hookimpl(specname="convert")
+def convert_shapely_multi_line_string(value: object):
+    if isinstance(value, shapely.MultiLineString):
+        return dict(
+            length=value.length,
+            height=value.bounds[3] - value.bounds[1],
+            width=value.bounds[2] - value.bounds[0],
+            x=[list(ls.xy[0]) for ls in value.geoms],
+            y=[list(ls.xy[1]) for ls in value.geoms],
+        )
+
+
+@hookimpl(specname="convert")
+def convert_shapely_polygon(value: object):
+    if isinstance(value, shapely.Polygon):
+        return dict(
+            area=value.area,
+            perimeter=value.length,
+            height=value.bounds[3] - value.bounds[1],
+            width=value.bounds[2] - value.bounds[0],
+            x=list(value.boundary.xy[0]),
+            y=list(value.boundary.xy[1]),
+        )
+
+
+@hookimpl(specname="convert")
+def convert_shapely_multi_polygon(value: object):
+    if isinstance(value, shapely.MultiPolygon):
+        return dict(
+            area=value.area,
+            perimeter=value.length,
+            height=value.bounds[3] - value.bounds[1],
+            width=value.bounds[2] - value.bounds[0],
+            x=[list(ls.boundary.xy[0]) for ls in value.geoms],
+            y=[list(ls.boundary.xy[1]) for ls in value.geoms],
+        )
+
+
+@hookimpl(specname="convert")
+def convert_shapely_point(value: object):
+    if isinstance(value, shapely.Point):
+        return value.x, value.y
+
+
+@hookimpl(specname="convert")
+def convert_shapely_multi_point(value: object):
+    if isinstance(value, shapely.MultiPoint):
+        return [(p.x, p.y) for p in value.geoms]
 
 
 @hookimpl(specname="convert")

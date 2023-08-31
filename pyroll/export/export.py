@@ -1,5 +1,6 @@
 from typing import Any, Sequence
 
+import numpy as np
 import pandas as pd
 import yaml
 
@@ -8,6 +9,15 @@ from pyroll.core import Unit, Profile
 import json
 import rtoml
 from typing import Union
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, np.ndarray):
+            return list(o)
+
+        # Let the base class default method raise the TypeError
+        return json.JSONEncoder.default(self, o)
 
 
 def to_dict(obj: Union[Unit, Profile]) -> dict[str, Any]:
@@ -41,7 +51,7 @@ def to_json(obj: Union[Unit, Profile]) -> str:
     :param obj: the unit or profile to export
     :returns: the created JSON document text
     """
-    return json.dumps(to_dict(obj), indent=4)
+    return json.dumps(to_dict(obj), indent=4, cls=JSONEncoder)
 
 
 def to_toml(obj: Union[Unit, Profile]) -> str:
