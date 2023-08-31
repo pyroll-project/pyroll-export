@@ -16,7 +16,8 @@ in_profile = Profile.round(
     chemical_composition={
         "Fe": 0.95,
         "Cr": 0.05,
-    }
+    },
+    density=lambda self: 7e3 + self.temperature
 )
 
 sequence = PassSequence([

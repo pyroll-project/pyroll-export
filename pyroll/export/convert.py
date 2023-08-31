@@ -1,3 +1,4 @@
+import inspect
 from dataclasses import is_dataclass
 from typing import Any, Union
 from collections.abc import Sequence, Set, Mapping
@@ -14,7 +15,7 @@ def _to_dict(instance: ReprMixin):
         "type": type(instance).__qualname__
     } | {
         n: c for n, v in instance.__attrs__.items()
-        if (c := plugin_manager.hook.convert(name=n, value=v)) is not None
+        if (c := plugin_manager.hook.convert(name=n, value=v, parent=instance)) is not None
     }
 
 
@@ -100,7 +101,7 @@ def convert_repr_mixin(value: object):
 @hookimpl(specname="convert")
 def convert_mapping(name: str, value: object):
     if isinstance(value, Mapping):
-        return {n: plugin_manager.hook.convert(name=f"{name}[{n}]", value=v) for n, v in value.items()}
+        return {n: plugin_manager.hook.convert(name=f"{name}[{n}]", value=v, parent=value) for n, v in value.items()}
 
 
 @hookimpl(specname="convert")
@@ -110,7 +111,7 @@ def convert_sequence(name: str, value: object):
             and not isinstance(value, str)
             and not isinstance(value, np.ndarray)
     ):
-        return [plugin_manager.hook.convert(name=f"{name}[{i}]", value=v) for i, v in enumerate(value)]
+        return [plugin_manager.hook.convert(name=f"{name}[{i}]", value=v, parent=value) for i, v in enumerate(value)]
 
 
 @hookimpl(specname="convert")
@@ -118,7 +119,7 @@ def convert_numpy_array(name: str, value):
     if isinstance(value, np.ndarray):
         squeezed = value.squeeze()
         if squeezed.ndim == 0:
-            return plugin_manager.hook.convert(name=name, value=squeezed[()])
+            return plugin_manager.hook.convert(name=name, value=squeezed[()], parent=value)
         return value
 
 
@@ -137,3 +138,12 @@ def convert_primitives(value):
 def convert_dataclass(value):
     if is_dataclass(value):
         return dict(value.__dict__)
+
+
+@hookimpl(specname="convert")
+def convert_callable(value, parent):
+    if callable(value):
+        if len(inspect.signature(value).parameters) == 0:
+            return value()
+        else:
+            return value(parent)
