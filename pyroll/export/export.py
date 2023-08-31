@@ -1,3 +1,4 @@
+import array
 from typing import Any, Sequence
 
 import numpy as np
@@ -8,15 +9,6 @@ from .convert import _to_dict, _flatten_dict
 from pyroll.core import Unit, Profile
 import json
 from typing import Union
-
-
-class JSONEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, np.ndarray):
-            return list(o)
-
-        # Let the base class default method raise the TypeError
-        return json.JSONEncoder.default(self, o)
 
 
 def to_dict(obj: Union[Unit, Profile]) -> dict[str, Any]:
@@ -43,6 +35,20 @@ def to_pandas(sequence: Sequence[Unit]) -> pd.DataFrame:
     return df.convert_dtypes()
 
 
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, np.ndarray):
+            return list(o)
+
+        if isinstance(o, np.floating):
+            return float(o)
+        if isinstance(o, np.integer):
+            return int(o)
+
+        # Let the base class default method raise the TypeError
+        return json.JSONEncoder.default(self, o)
+
+
 def to_json(obj: Union[Unit, Profile]) -> str:
     """
     Exports a PyRolL Unit object to a JSON document based on the result of ``to_dict()``.
@@ -53,6 +59,24 @@ def to_json(obj: Union[Unit, Profile]) -> str:
     return json.dumps(to_dict(obj), indent=4, cls=JSONEncoder)
 
 
+def _array_repr(dumper: yaml.Dumper, value):
+    return dumper.represent_list(list(value))
+
+
+def _np_float_repr(dumper: yaml.Dumper, value):
+    return dumper.represent_float(float(value))
+
+
+def _np_int_repr(dumper: yaml.Dumper, value):
+    return dumper.represent_int(int(value))
+
+
+yaml.add_representer(array.array, _array_repr, yaml.SafeDumper)
+yaml.add_representer(np.ndarray, _array_repr, yaml.SafeDumper)
+yaml.add_multi_representer(np.integer, _np_int_repr, yaml.SafeDumper)
+yaml.add_multi_representer(np.floating, _np_float_repr, yaml.SafeDumper)
+
+
 def to_yaml(obj: Union[Unit, Profile]) -> str:
     """
     Exports a PyRolL Unit object to a YAML document based on the result of ``to_dict()``.
@@ -60,4 +84,4 @@ def to_yaml(obj: Union[Unit, Profile]) -> str:
     :param obj: the unit or profile to export
     :returns: the created YAML document text
     """
-    return yaml.dump(to_dict(obj))
+    return yaml.safe_dump(to_dict(obj))

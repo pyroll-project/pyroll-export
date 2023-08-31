@@ -36,7 +36,7 @@ def convert_shapely_line_string(value: object):
             height=value.bounds[3] - value.bounds[1],
             width=value.bounds[2] - value.bounds[0],
             x=np.array(value.xy[0]),
-            y=list(value.xy[1]),
+            y=np.array(value.xy[1]),
         )
 
 
@@ -47,8 +47,8 @@ def convert_shapely_multi_line_string(value: object):
             length=value.length,
             height=value.bounds[3] - value.bounds[1],
             width=value.bounds[2] - value.bounds[0],
-            x=[list(ls.xy[0]) for ls in value.geoms],
-            y=[list(ls.xy[1]) for ls in value.geoms],
+            x=[np.array(ls.xy[0]) for ls in value.geoms],
+            y=[np.array(ls.xy[1]) for ls in value.geoms],
         )
 
 
@@ -60,8 +60,8 @@ def convert_shapely_polygon(value: object):
             perimeter=value.length,
             height=value.bounds[3] - value.bounds[1],
             width=value.bounds[2] - value.bounds[0],
-            x=list(value.boundary.xy[0]),
-            y=list(value.boundary.xy[1]),
+            x=np.array(value.boundary.xy[0]),
+            y=np.array(value.boundary.xy[1]),
         )
 
 
@@ -73,8 +73,8 @@ def convert_shapely_multi_polygon(value: object):
             perimeter=value.length,
             height=value.bounds[3] - value.bounds[1],
             width=value.bounds[2] - value.bounds[0],
-            x=[list(ls.boundary.xy[0]) for ls in value.geoms],
-            y=[list(ls.boundary.xy[1]) for ls in value.geoms],
+            x=[np.array(ls.boundary.xy[0]) for ls in value.geoms],
+            y=[np.array(ls.boundary.xy[1]) for ls in value.geoms],
         )
 
 
@@ -118,7 +118,7 @@ def convert_numpy_array(name: str, value):
         squeezed = value.squeeze()
         if squeezed.ndim == 0:
             return plugin_manager.hook.convert(name=name, value=squeezed[()])
-        return [plugin_manager.hook.convert(name=f"{name}[{i}]", value=value[i]) for i in range(len(value))]
+        return value
 
 
 @hookimpl(specname="convert")
