@@ -1,3 +1,4 @@
+from dataclasses import is_dataclass
 from typing import Any, Union
 from collections.abc import Sequence, Set, Mapping
 
@@ -130,3 +131,9 @@ def convert_primitives(value):
             return int(value)
     if isinstance(value, (float, str, int, bool, bytes)):
         return value
+
+
+@hookimpl(specname="convert")
+def convert_dataclass(value):
+    if is_dataclass(value):
+        return dict(value.__dict__)

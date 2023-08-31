@@ -6,13 +6,13 @@ import numpy as np
 import pyroll.export
 
 from pyroll.core import Profile, Roll, RollPass, Transport, RoundGroove, CircularOvalGroove, PassSequence
+import pyroll.freiberg_flow_stress
 
 in_profile = Profile.round(
     diameter=30e-3,
     temperature=1200 + 273.15,
     strain=0,
     material=["C45", "steel"],
-    flow_stress=100e6,
     chemical_composition={
         "Fe": 0.95,
         "Cr": 0.05,
