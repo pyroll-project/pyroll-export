@@ -1,4 +1,3 @@
-import subprocess
 import webbrowser
 from pathlib import Path
 
@@ -71,13 +70,6 @@ def test_pandas(tmp_path: Path):
     f = (tmp_path / "df.html")
     f.write_text(exported.to_html())
     webbrowser.open(f.as_uri())
-
-
-def test_toml(tmp_path: Path):
-    exported = pyroll.export.to_toml(sequence)
-
-    print()
-    print(exported)
 
 
 def test_yaml(tmp_path: Path):

@@ -7,7 +7,6 @@ import yaml
 from .convert import _to_dict, _flatten_dict
 from pyroll.core import Unit, Profile
 import json
-import rtoml
 from typing import Union
 
 
@@ -52,16 +51,6 @@ def to_json(obj: Union[Unit, Profile]) -> str:
     :returns: the created JSON document text
     """
     return json.dumps(to_dict(obj), indent=4, cls=JSONEncoder)
-
-
-def to_toml(obj: Union[Unit, Profile]) -> str:
-    """
-    Exports a PyRolL Unit object to a TOML document based on the result of ``to_dict()``.
-
-    :param obj: the unit or profile to export
-    :returns: the created TOML document text
-    """
-    return rtoml.dumps(to_dict(obj))
 
 
 def to_yaml(obj: Union[Unit, Profile]) -> str:

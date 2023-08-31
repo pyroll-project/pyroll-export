@@ -1,6 +1,6 @@
 import importlib.util
 
-from .export import to_dict, to_pandas, to_json, to_toml, to_yaml
+from .export import to_dict, to_pandas, to_json, to_yaml
 from pyroll.export.pluggy import plugin_manager
 
 from . import hookspecs
@@ -16,4 +16,4 @@ CLI_INSTALLED = bool(importlib.util.find_spec("pyroll.cli"))
 if CLI_INSTALLED:
     from . import cli
 
-VERSION = "2.0.0"
+VERSION = "2.1.0"

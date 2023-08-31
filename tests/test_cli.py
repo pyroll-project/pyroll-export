@@ -76,16 +76,6 @@ def test_cli_csv(tmp_path: Path):
     print()
     print((tmp_path / "export.csv").read_text())
 
-def test_cli_toml(tmp_path: Path):
-    (tmp_path / "input.py").write_text(INPUT)
-
-    result = subprocess.run(("pyroll", "input-py", "solve", "export-toml"), cwd=tmp_path)
-
-    result.check_returncode()
-
-    print()
-    print((tmp_path / "export.toml").read_text())
-
 
 def test_cli_yaml(tmp_path: Path):
     (tmp_path / "input.py").write_text(INPUT)
