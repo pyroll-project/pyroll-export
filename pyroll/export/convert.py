@@ -27,7 +27,7 @@ def _flatten_dict(d: dict[str, Any]) -> dict[Union[str, tuple[str, ...]], Any]:
             else:
                 yield prefix + (k,), v
 
-    return dict((".".join(k), v) for k, v in _gen(d))
+    return dict(("_".join(k), v) for k, v in _gen(d))
 
 
 @hookimpl(specname="convert")
