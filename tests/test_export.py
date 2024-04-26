@@ -32,6 +32,7 @@ sequence = PassSequence([
             nominal_radius=160e-3,
             rotational_frequency=1
         ),
+        disk_element_count=3,
         gap=2e-3,
     ),
     Transport(
