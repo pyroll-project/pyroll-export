@@ -24,10 +24,13 @@ def _flatten_dict(d: dict[str, Any]) -> dict[Union[str, tuple[str, ...]], Any]:
         for k, v in d_.items():
             if isinstance(v, dict):
                 yield from _gen(v, prefix + (k,))
+            elif k == "disk_elements":
+                for i, de in enumerate(v):
+                    yield from _gen(de, prefix + (k, str(i)))
             else:
                 yield prefix + (k,), v
 
-    return dict((".".join(k), v) for k, v in _gen(d))
+    return dict(("_".join(k), v) for k, v in _gen(d))
 
 
 @hookimpl(specname="convert")
