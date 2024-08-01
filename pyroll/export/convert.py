@@ -65,8 +65,8 @@ def convert_shapely_polygon(value: object):
             perimeter=value.length,
             height=value.bounds[3] - value.bounds[1],
             width=value.bounds[2] - value.bounds[0],
-            x=np.array(value.exterior.xy[0]),
-            y=np.array(value.exterior.xy[1]),
+            x=np.array(value.exterior.coords.xy[0]),
+            y=np.array(value.exterior.coords.xy[1]),
         )
 
 
@@ -78,8 +78,8 @@ def convert_shapely_multi_polygon(value: object):
             perimeter=value.length,
             height=value.bounds[3] - value.bounds[1],
             width=value.bounds[2] - value.bounds[0],
-            x=[np.array(ls.exterior.xy[0]) for ls in value.geoms],
-            y=[np.array(ls.exterior.xy[1]) for ls in value.geoms],
+            x=[np.array(ls.exterior.coords.xy[0]) for ls in value.geoms],
+            y=[np.array(ls.exterior.coords.xy[1]) for ls in value.geoms],
         )
 
 
