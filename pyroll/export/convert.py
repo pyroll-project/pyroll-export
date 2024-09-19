@@ -42,6 +42,8 @@ def convert_shapely_line_string(value: object):
             width=value.bounds[2] - value.bounds[0],
             x=np.array(value.xy[0]),
             y=np.array(value.xy[1]),
+            xy=np.array(value.xy),
+            coords=np.array(value.coords),
         )
 
 
@@ -54,6 +56,8 @@ def convert_shapely_multi_line_string(value: object):
             width=value.bounds[2] - value.bounds[0],
             x=[np.array(ls.xy[0]) for ls in value.geoms],
             y=[np.array(ls.xy[1]) for ls in value.geoms],
+            xy=np.concatenate([np.array(ls.xy) for ls in value.geoms], axis=1),
+            coords=np.concatenate([np.array(ls.coords) for ls in value.geoms], axis=0),
         )
 
 
@@ -67,6 +71,8 @@ def convert_shapely_polygon(value: object):
             width=value.bounds[2] - value.bounds[0],
             x=np.array(value.exterior.coords.xy[0]),
             y=np.array(value.exterior.coords.xy[1]),
+            xy=np.array(value.exterior.coords.xy),
+            coords=np.array(value.exterior.coords),
         )
 
 
@@ -80,19 +86,21 @@ def convert_shapely_multi_polygon(value: object):
             width=value.bounds[2] - value.bounds[0],
             x=[np.array(ls.exterior.coords.xy[0]) for ls in value.geoms],
             y=[np.array(ls.exterior.coords.xy[1]) for ls in value.geoms],
+            xy=np.concatenate([np.array(pg.exterior.coords.xy) for pg in value.geoms], axis=1),
+            coords=np.concatenate([np.array(pg.exterior.coords) for pg in value.geoms], axis=0),
         )
 
 
 @hookimpl(specname="convert")
 def convert_shapely_point(value: object):
     if isinstance(value, shapely.Point):
-        return value.x, value.y
+        return np.array([value.x, value.y])
 
 
 @hookimpl(specname="convert")
 def convert_shapely_multi_point(value: object):
     if isinstance(value, shapely.MultiPoint):
-        return [(p.x, p.y) for p in value.geoms]
+        return np.array([(p.x, p.y) for p in value.geoms])
 
 
 @hookimpl(specname="convert")
