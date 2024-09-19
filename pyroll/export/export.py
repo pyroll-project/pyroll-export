@@ -32,7 +32,7 @@ def to_pandas(sequence: Sequence[Unit]) -> pd.DataFrame:
         _flatten_dict(_to_dict(u)) for u in sequence
     ])
     df.sort_index(axis="columns", inplace=True)
-    return df.convert_dtypes()
+    return df
 
 
 class JSONEncoder(json.JSONEncoder):
