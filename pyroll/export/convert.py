@@ -1,6 +1,6 @@
 import inspect
 from dataclasses import is_dataclass
-from typing import Any, Union
+from typing import Any, Union, Iterable
 from collections.abc import Sequence, Set, Mapping
 
 import numpy as np
@@ -32,6 +32,21 @@ def _flatten_dict(d: dict[str, Any]) -> dict[Union[str, tuple[str, ...]], Any]:
 
     return dict(("_".join(k), v) for k, v in _gen(d))
 
+def _yield_arrays_with_nan_delimiter_1d(coordinate_arrays: Iterable[np.ndarray]):
+    for a in coordinate_arrays:
+        yield a
+        yield np.array([np.nan])
+
+def _yield_arrays_with_nan_delimiter_xy(coordinate_arrays: Iterable[np.ndarray]):
+    for a in coordinate_arrays:
+        yield a
+        yield np.array([[np.nan], [np.nan]])
+
+def _yield_arrays_with_nan_delimiter_coords(coordinate_arrays: Iterable[np.ndarray]):
+    for a in coordinate_arrays:
+        yield a
+        yield np.array([[np.nan, np.nan]])
+
 
 @hookimpl(specname="convert")
 def convert_shapely_line_string(value: object):
@@ -54,10 +69,10 @@ def convert_shapely_multi_line_string(value: object):
             length=value.length,
             height=value.bounds[3] - value.bounds[1],
             width=value.bounds[2] - value.bounds[0],
-            x=[np.array(ls.xy[0]) for ls in value.geoms],
-            y=[np.array(ls.xy[1]) for ls in value.geoms],
-            xy=np.concatenate([np.array(ls.xy) for ls in value.geoms], axis=1),
-            coords=np.concatenate([np.array(ls.coords) for ls in value.geoms], axis=0),
+            x=np.concatenate(list(_yield_arrays_with_nan_delimiter_1d([np.array(ls.xy[0]) for ls in value.geoms]))),
+            y=np.concatenate(list(_yield_arrays_with_nan_delimiter_1d([np.array(ls.xy[1]) for ls in value.geoms]))),
+            xy=np.concatenate(list(_yield_arrays_with_nan_delimiter_xy([np.array(ls.xy) for ls in value.geoms])), axis=1),
+            coords=np.concatenate(list(_yield_arrays_with_nan_delimiter_coords([np.array(ls.coords) for ls in value.geoms])), axis=0),
         )
 
 
@@ -84,10 +99,10 @@ def convert_shapely_multi_polygon(value: object):
             perimeter=value.length,
             height=value.bounds[3] - value.bounds[1],
             width=value.bounds[2] - value.bounds[0],
-            x=[np.array(ls.exterior.coords.xy[0]) for ls in value.geoms],
-            y=[np.array(ls.exterior.coords.xy[1]) for ls in value.geoms],
-            xy=np.concatenate([np.array(pg.exterior.coords.xy) for pg in value.geoms], axis=1),
-            coords=np.concatenate([np.array(pg.exterior.coords) for pg in value.geoms], axis=0),
+            x=np.concatenate(list(_yield_arrays_with_nan_delimiter_1d([np.array(ls.exterior.xy[0]) for ls in value.geoms]))),
+            y=np.concatenate(list(_yield_arrays_with_nan_delimiter_1d([np.array(ls.exterior.xy[1]) for ls in value.geoms]))),
+            xy=np.concatenate(list(_yield_arrays_with_nan_delimiter_xy([np.array(ls.exterior.xy) for ls in value.geoms])), axis=1),
+            coords=np.concatenate(list(_yield_arrays_with_nan_delimiter_coords([np.array(ls.exterior.coords) for ls in value.geoms])), axis=0),
         )
 
 
